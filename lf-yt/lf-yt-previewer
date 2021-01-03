@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+
+lf -remote "send $id echo ''" # clear message line
+
+preview() {
+	cat <<-EOF | paste -sd '' >"$LF_YT_TEMPDIR/.fifo"
+	{
+	"action": "add", "identifier": "lf-preview",
+	"path": "$1", "x": $4, "y": $5, "width": $2, "height": $3,
+	"scaler": "contain"
+	}
+	EOF
+}
+
+lf-yt-cleaner # clean active preview
+
+file="$1"; shift
+preview "$file" "$@"
+
+titlefile=".$(basename "$file").title"
+if title="$(cat ".$(basename "$file").title")"; then
+	lf -remote "send $id set promptfmt '$title'" # display title
+fi
+lf -remote "send $id echo "'"\033[4mEnter\033[0m Play | \033[4md\033[0m Download Selected | \033[4mq\033[m Quit"'
+return 127 # nonzero retcode required for lf previews to reload

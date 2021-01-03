@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+# TODO: Remove LF_UebERZUG_FIFO and use LF_UEBERZUG_TEMPDIR/fifo
+
+cleanup() {
+	rm -r "$LF_UEBERZUG_TEMPDIR" 2>/dev/null
+	kill $ueberzugpid 2>/dev/null
+}
+
+export LF_UEBERZUG_TEMPDIR="$(mktemp -d -t lf-ueberzug-XXXXXX)"
+trap cleanup INT
+
+export LF_UEBERZUG_FIFO="$LF_UEBERZUG_TEMPDIR/fifo"
+mkfifo "$LF_UEBERZUG_FIFO"
+tail -f "$LF_UEBERZUG_FIFO" | ueberzug layer --silent &
+ueberzugpid=$!
+lf -command "source '${XDG_CONFIG_HOME:-$HOME/.config}/lf-ueberzug/lfrc-ueberzug'" "$@"
+cleanup

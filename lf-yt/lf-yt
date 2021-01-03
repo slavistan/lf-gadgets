@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+cleanup() {
+	rm -r "$LF_YT_TEMPDIR" 2>/dev/null
+	pkill -P "$geturlpid" 2>/dev/null
+	kill "$geturlpid" 2>/dev/null
+	kill "$ueberzugpid" 2>/dev/null
+}
+
+###
+### Settings
+###
+maxresults=15
+
+# check api key
+if [ -z "$YT_API_KEY" ]; then
+	if YT_API_KEY="$(cat ~/.youtube.apikey 2>/dev/null)"; then
+		export YT_API_KEY
+	else
+		echo "API-key missing. Please export your API-key to YT_API_KEY or store it in '~/.youtube.apikey'." >&2
+		exit 1
+	fi
+fi
+
+LF_YT_TEMPDIR="$(mktemp -d -t lf-ueberzug-XXXXXX)"
+export LF_YT_TEMPDIR
+trap cleanup INT
+
+query="$@"
+if [ -z "$query" ]; then
+	echo "Nothing to search. Abort." >&2
+	exit 1
+fi
+query="$(echo "$query" | sed 's/ /+/g')"
+
+# get urls of thumbnails, video- and audio-streams
+reply="$(curl -s "https://www.googleapis.com/youtube/v3/search?part=snippet&q=$query&type=video&maxResults=$maxresults&key=$YT_API_KEY")"
+thumbnailurls="$(echo "$reply" | jq -r '.items[].snippet.thumbnails.high.url')"
+videoids="$(echo "$reply" | jq -r '.items[].id.videoId')"
+titles="$(echo "$reply" | jq -r '.items[].snippet.title')"
+
+# download thumbnails
+cd "$LF_YT_TEMPDIR"
+paste -d '\n' <(echo "$videoids") <(echo "$thumbnailurls") |
+	xargs -n 2 -P 8 curl -s -o
+cd - >/dev/null
+
+# save titles to .<videoid>.title which will be used by lf-yt-previewer
+# to view the video title
+paste -d ' ' <(echo "$videoids") <(echo "$titles") | while read line; do
+	videoid="$(echo "$line" | cut -d' ' -f1)"
+	title="$(echo "$line" | cut -d' ' -f2-)"
+	echo "$title" > "$LF_YT_TEMPDIR/.$videoid.title"
+done
+
+# prepare ueberzug and start lf
+mkfifo "$LF_YT_TEMPDIR/.fifo"
+tail -f "$LF_YT_TEMPDIR/.fifo" | ueberzug layer --silent &
+ueberzugpid=$!
+lf -command "source '${XDG_CONFIG_HOME:-$HOME/.config}/lf-yt/lfrc-yt" "$LF_YT_TEMPDIR"
+
+cleanup
+# TODO: posix shell

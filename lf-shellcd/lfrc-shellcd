@@ -1,0 +1,7 @@
+map q quitcd
+cmd quitcd ${{
+	echo "1" > "$LF_SHELLCD_TEMPDIR/changecwd"
+	lf -remote "send $id quit"
+}}
+
+# Put additional configuration which shall only apply to lf-shellcd below
