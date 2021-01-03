@@ -15,7 +15,7 @@ make install
 
 # Configure your shell
 echo 'source "${XDG_CONFIG_HOME:-$HOME/.config}/lf-shellcd/lf-shellcd"' \
-	>>~/.config/zsh/.zshrc
+    >>~/.config/zsh/.zshrc
 #     ^---- replace with path to your zshrc/bashrc
 ```
 
