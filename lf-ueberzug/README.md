@@ -15,8 +15,7 @@ lf-ueberzug
 
 For comfy shell integration simply `alias lf=lf-ueberzug` or, if you'd
 additionally like to change your shell's working directory upon exiting `lf`,
-see `lf-shellcd`, which is part of this repository. `lf-ueberzug` is fully
-compatible with `lf-shellcd`.
+see `lf-shellcd`, which is part of this repository.
 
 
 ## Installation

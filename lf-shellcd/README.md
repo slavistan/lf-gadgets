@@ -19,6 +19,12 @@ echo 'source "${XDG_CONFIG_HOME:-$HOME/.config}/lf-shellcd/lf-shellcd"' \
 #     ^---- replace with path to your zshrc/bashrc
 ```
 
+NOTE: Currently `lf-ueberzug` and `lf-shellcd` are not directly compatible due
+to `lf`'s missing support for multiple simultaneous **-command** flags (see
+https://github.com/gokcehan/lf/issues/551).
+
+<!--
+COMBAK: 'https://github.com/gokcehan/lf/issues/551' to resolve.
 If you've installed `lf-ueberzug` and want image previews by default when
 running `lf` from your shell with the above setup use `lf-ueberzug` in line
 4 of *lf-shellcd* (instead of `lf`):
@@ -28,3 +34,4 @@ running `lf` from your shell with the above setup use `lf-ueberzug` in line
 	lf-ueberzug -last-dir-path "$LF_SHELLCD_TEMPDIR/lastdir" \
 # ...
 ```
+-->
