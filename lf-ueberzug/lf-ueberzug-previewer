@@ -13,7 +13,7 @@ preview() {
 lf-ueberzug-cleaner # clean active preview
 
 file="$1"; shift
-case "$file" in
+case "$(basename "$file" | tr '[A-Z]' '[a-z]')" in
 *.tar*) tar tf "$file" ;;
 *.zip) unzip -l "$file" ;;
 *.rar) unrar l "$file" ;;
