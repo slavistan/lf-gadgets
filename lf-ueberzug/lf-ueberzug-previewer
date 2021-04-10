@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 preview() {
-	cat <<-EOF | paste -sd '' >"$LF_UEBERZUG_FIFO"
+	cat <<-EOF | paste -sd '' >"$LF_UEBERZUG_TEMPDIR/fifo"
 	{
 	"action": "add", "identifier": "lf-preview",
 	"path": "$1", "x": $4, "y": $5, "width": $2, "height": $3,
@@ -13,7 +13,7 @@ preview() {
 lf-ueberzug-cleaner # clean active preview
 
 file="$1"; shift
-case "$(basename "$file" | tr '[A-Z]' '[a-z]')" in
+case "$(basename "$file" | tr '[:upper:]' '[:lower:]')" in
 *.tar*) tar tf "$file" ;;
 *.zip) unzip -l "$file" ;;
 *.rar) unrar l "$file" ;;
