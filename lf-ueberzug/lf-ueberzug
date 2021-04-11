@@ -3,7 +3,7 @@
 cleanup() {
 	lf-ueberzug-cleaner
 	kill "$ueberzugpid"
-	pkill -f "tail -f \"LF_UEBERZUG_TEMPDIR\"" # kill tail zombie
+	pkill -f "tail -f $LF_UEBERZUG_TEMPDIR/fifo" # kill tail zombie
 	rm -rf "$LF_UEBERZUG_TEMPDIR"
 }
 
