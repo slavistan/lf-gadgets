@@ -32,7 +32,12 @@ case "$(basename "$file" | tr '[:upper:]' '[:lower:]')" in
 	preview "$file" "$@" ;;
 *.svg)
 	thumbnail="$LF_UEBERZUG_TEMPDIR/thumbnail.png"
-	convert "$file" "$thumbnail"
+	gm convert "$file" "$thumbnail"
+	preview "$thumbnail" "$@"
+	;;
+*.gif)
+	thumbnail="$LF_UEBERZUG_TEMPDIR/thumbnail.png"
+	gm convert "$file[0]" "$thumbnail"
 	preview "$thumbnail" "$@"
 	;;
 *) cat "$file" ;;

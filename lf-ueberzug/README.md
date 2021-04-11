@@ -22,7 +22,7 @@ see `lf-shellcd`, which is part of this repository.
 
 Prerequisites:
 + ueberzug
-+ imagemagick (for .svg previews)
++ graphicsmagick (for svg and gif previews)
 + ffmpeg (for video file thumbnails)
 + gs (for pdf previews)
 
