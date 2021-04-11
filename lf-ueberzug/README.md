@@ -27,6 +27,12 @@ Prerequisites:
 + gs (for pdf previews)
 
 ```
-# Install files (mind the 'sudo -E')
-sudo -E make install
+# copy scripts into $PATH
+sudo cp -t /usr/local/bin lf-ueberzug lf-ueberzug-cleaner lf-ueberzug-previewer
+
+# copy config file
+mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}/lf-ueberzug"
+cp lfrc-ueberzug "${XDG_CONFIG_HOME:-$HOME/.config}/lf-ueberzug"
 ```
+
+To uninstall simply delete the files.
