@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-cat <<EOF | paste -s -d '' >"$LF_YT_TEMPDIR/.fifo"
+cat <<EOF | paste -sd '' >"$LF_YT_TEMPDIR/.fifo"
 {
 "action": "remove",
 "identifier": "lf-preview"

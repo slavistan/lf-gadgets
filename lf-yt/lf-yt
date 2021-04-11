@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 cleanup() {
+	lf-yt-cleaner
 	rm -r "$LF_YT_TEMPDIR" 2>/dev/null
-	pkill -P "$geturlpid" 2>/dev/null
-	kill "$geturlpid" 2>/dev/null
 	kill "$ueberzugpid" 2>/dev/null
+	pkill -f "tail -f $LF_YT_TEMPDIR/.fifo" # kill tail zombie
 }
 
 ###
@@ -22,7 +22,7 @@ if [ -z "$YT_API_KEY" ]; then
 	fi
 fi
 
-LF_YT_TEMPDIR="$(mktemp -d -t lf-ueberzug-XXXXXX)"
+LF_YT_TEMPDIR="$(mktemp -d -t lf-yt-XXXXXX)"
 export LF_YT_TEMPDIR
 trap cleanup INT
 
@@ -54,10 +54,9 @@ paste -d ' ' <(echo "$videoids") <(echo "$titles") | while read line; do
 done
 
 # prepare ueberzug and start lf
-mkfifo "$LF_YT_TEMPDIR/.fifo"
+mkfifo "$LF_YT_TEMPDIR/.fifo" # fifo must be hidden to not be shown by lf
 tail -f "$LF_YT_TEMPDIR/.fifo" | ueberzug layer --silent &
 ueberzugpid=$!
 lf -command "source '${XDG_CONFIG_HOME:-$HOME/.config}/lf-yt/lfrc-yt" "$LF_YT_TEMPDIR"
-
 cleanup
 # TODO: posix shell
