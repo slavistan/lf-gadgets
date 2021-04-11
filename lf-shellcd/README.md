@@ -4,14 +4,15 @@
 
 Creates a shell function `lfcd` aliased to `lf`. The function launches `lf` and
 adds the command *quitcd* which will exit and change the shell's working
-directory to `lf`'s final directory before quitting. By default, the command is
-mapped to *q* which can be changed in *lfrc-shellcd*.
+directory to `lf`'s final directory before quitting. By default, the exit
+command is mapped to *q* which can be changed in *lfrc-shellcd*.
 
 ## Installation
 
 ```
-# Copy files (use 'sudo -E' if you have to sudo)
-make install
+# Copy files to .config directory
+mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}/lf-shellcd"
+cp lfrc-shellcd lf-shellcd "${XDG_CONFIG_HOME:-$HOME/.config}/lf-shellcd"
 
 # Configure your shell
 echo 'source "${XDG_CONFIG_HOME:-$HOME/.config}/lf-shellcd/lf-shellcd"' \
@@ -28,3 +29,6 @@ running `lf` from your shell with the above setup use `lf-ueberzug` in line
 	lf-ueberzug -last-dir-path "$LF_SHELLCD_TEMPDIR/lastdir" \
 # ...
 ```
+
+To uninstall simply delete the files and remove the added line from your
+zshrc/bashrc.

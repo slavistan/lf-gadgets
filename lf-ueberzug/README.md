@@ -28,7 +28,7 @@ Prerequisites:
 
 ```
 # copy scripts into $PATH
-sudo cp -t /usr/local/bin lf-ueberzug lf-ueberzug-cleaner lf-ueberzug-previewer
+sudo cp lf-ueberzug lf-ueberzug-cleaner lf-ueberzug-previewer /usr/local/bin
 
 # copy config file
 mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}/lf-ueberzug"
