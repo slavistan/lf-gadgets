@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+cleanup() {
+	rm -rf "$LF_SCROLLINGPREVIEW_TEMPDIR"
+}
+
+trap cleanup INT HUP
+
+LF_SCROLLINGPREVIEW_TEMPDIR="$(mktemp -d -t lf-scrollingpreview-XXXXXX)"
+export LF_SCROLLINGPREVIEW_TEMPDIR
+echo "1" >"$LF_SCROLLINGPREVIEW_TEMPDIR/offset"
+lf -command "source '${XDG_CONFIG_HOME:-$HOME/.config}/lf-scrollingpreview/lfrc-scrollingpreview'" "$@"
+cleanup

@@ -1,0 +1,18 @@
+set previewer lf-scrollingpreview-previewer
+
+map <lt> decoffset
+map <gt> incoffset
+
+cmd incoffset &{{
+	offset="$(cat "$LF_SCROLLINGPREVIEW_TEMPDIR/offset")"
+	echo "$(( offset + 1 ))" >"$LF_SCROLLINGPREVIEW_TEMPDIR/offset"
+}}
+
+cmd decoffset &{{
+	offset="$(cat "$LF_SCROLLINGPREVIEW_TEMPDIR/offset")"
+	if [ "$offset" -gt 1 ]; then
+		echo "$(( offset - 1 ))" >"$LF_SCROLLINGPREVIEW_TEMPDIR/offset"
+	fi
+}}
+
+# Put additional configuration which shall only apply to lf-scrollingpreview below
