@@ -1,0 +1,71 @@
+#!/usr/bin/env sh
+
+# TODO:
+#  -m: multiple files
+#  -z: Use nullbyte as separator for multiple files
+#  README.md
+#  Rename (lf-filedialog maybe?)
+
+cleanup() {
+	if [ -z "$nocleanup" ]; then
+		rm -rf "$LF_SAVEAS_TEMPDIR"
+	fi
+}
+
+usage() {
+	hl="$(printf "\033[1;3m")"
+	i="$(printf "\033[3m")"
+	p="$(printf "\033[3;4m")"
+	d="$(printf "\033[0m")"
+	name="$(basename "$0")"
+	cat <<-EOF
+		File dialogues using ${hl}lf${d}. Selection is written to stdout.
+
+		Usage:
+		    $name [-t ${p}TYPE${d}] [-s ${p}STARTDIR${d}]
+
+		        ${p}TYPE${d} designates what type of object(s) to return and
+		          may be any combination of the letters ${i}f${d} (files),
+		          ${i}d${d} (directories). DEFAULT: fd
+
+		        ${p}STARTDIR${d} sets the dialog's default working directory.
+		          DEFAULT: Working directory of the executing shell
+	EOF
+}
+
+parseargs() {
+	while :; do
+		case "$1" in
+		-h|--help) usage; exit; break ;;
+		-t) type_="$2"; shift; break ;;
+		-s) startdir="$2"; shift; break ;;
+		*) break ;;
+		esac
+	shift
+	done
+
+	# defaults
+	startdir="${startdir:-$(pwd)}"
+	type_="${type_:-fd}"
+}
+
+trap cleanup INT HUP
+parseargs "$@"
+
+# if so desired use custom tempdir (for debugging)
+if [ -z "$LF_SAVEAS_TEMPDIR" ]; then
+	LF_SAVEAS_TEMPDIR="$(mktemp -d -t lf-saveas-XXXXXX)"
+	export LF_SAVEAS_TEMPDIR
+else
+	nocleanup=1
+fi
+
+export LF_SAVEAS_TYPE="$type_"
+lf -command "source '${XDG_CONFIG_HOME:-$HOME/.config}/lf-saveas/lfrc-saveas" "$startdir"
+if [ -f "$LF_SAVEAS_TEMPDIR/path" ]; then
+	cat "$LF_SAVEAS_TEMPDIR/path"
+	cleanup
+else
+	cleanup
+	return 1
+fi

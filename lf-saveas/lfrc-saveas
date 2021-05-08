@@ -1,0 +1,33 @@
+map <enter> accept
+
+cmd accept %{{
+	if [ -f "$f" ]; then
+		if ! printf "$LF_SAVEAS_TYPE" | grep -qF "f"; then
+			lf -remote "send $id echoerr Regular files not allowed."
+			return 1
+		fi
+	elif [ -d "$f" ]; then
+		if ! printf "$LF_SAVEAS_TYPE" | grep -qF "d"; then
+			lf -remote "send $id echoerr Directories not allowed."
+			return 1
+		fi
+	fi
+	printf -- "%s" "$f" >"$LF_SAVEAS_TEMPDIR/path"
+	lf -remote "send $id quit"
+}}
+
+cmd saveas %{{
+	if [ "$#" -ne 1 ]; then
+		lf -remote "send $id echoerr Need exactly one argument. Abort"
+		return 1
+	fi
+
+	fullpath="$(pwd)/$1"
+	if [ -e "$fullpath" ]; then
+		lf -remote "send $id echoerr File already exist."
+		return 1
+	fi
+
+	printf -- "%s" "$fullpath" >"$LF_SAVEAS_TEMPDIR/path"
+	lf -remote "send $id quit"
+}}
