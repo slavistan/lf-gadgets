@@ -1,3 +1,6 @@
+%{{
+	lf -remote "send $id set promptfmt '$LF_SAVEAS_PROMPT'"
+}}
 map <enter> accept
 
 cmd accept %{{

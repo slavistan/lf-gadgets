@@ -5,6 +5,7 @@
 #  -z: Use nullbyte as separator for multiple files
 #  README.md
 #  Rename (lf-filedialog maybe?)
+#  Rename /path to /selection
 
 cleanup() {
 	if [ -z "$nocleanup" ]; then
@@ -22,11 +23,11 @@ usage() {
 		File dialogues using ${hl}lf${d}. Selection is written to stdout.
 
 		Usage:
-		    $name [-t ${p}TYPE${d}] [-s ${p}STARTDIR${d}]
+		    $name [-t ${p}TYPE${d}] [-s ${p}STARTDIR${d}] [-o ${p}OUTFILE${d}]
 
-		        ${p}TYPE${d} designates what type of object(s) to return and
-		          may be any combination of the letters ${i}f${d} (files),
-		          ${i}d${d} (directories). DEFAULT: fd
+		        -t ${p}TYPE${d} what type of object(s) to return and
+		           may be any combination of the letters ${i}f${d} (files),
+		           ${i}d${d} (directories). DEFAULT: fd
 
 		        ${p}STARTDIR${d} sets the dialog's default working directory.
 		          DEFAULT: Working directory of the executing shell
@@ -34,25 +35,34 @@ usage() {
 }
 
 parseargs() {
+	if [ "$1" = "-x" ]; then
+		shift
+		tempfile="$LF_SAVEAS_TEMPDIR/termout"
+		if "$TERMINAL" -e "$0" "$@" -o "$tempfile" >/dev/null 2>&1; then
+			cat "$tempfile"
+			cleanup
+			exit
+		fi
+		exit 1
+	fi
 	while :; do
 		case "$1" in
-		-h|--help) usage; exit; break ;;
-		-t) type_="$2"; shift; break ;;
-		-s) startdir="$2"; shift; break ;;
-		*) break ;;
+		-h|--help) usage; exit ;;
+		-t) type_="$2"; shift ;;
+		-s) startdir="$2"; shift ;;
+		-o) outfile="$2"; shift ;; # don't use -o manually!
+		-p) prompt="$2"; shift ;;
+		*)  break ;;
 		esac
-	shift
+		shift
 	done
 
 	# defaults
 	startdir="${startdir:-$(pwd)}"
 	type_="${type_:-fd}"
+	prompt="${prompt:-Select file(s):}"
 }
 
-trap cleanup INT HUP
-parseargs "$@"
-
-# if so desired use custom tempdir (for debugging)
 if [ -z "$LF_SAVEAS_TEMPDIR" ]; then
 	LF_SAVEAS_TEMPDIR="$(mktemp -d -t lf-saveas-XXXXXX)"
 	export LF_SAVEAS_TEMPDIR
@@ -60,10 +70,17 @@ else
 	nocleanup=1
 fi
 
+trap cleanup INT HUP
+parseargs "$@"
+
 export LF_SAVEAS_TYPE="$type_"
+export LF_SAVEAS_PROMPT="$prompt"
 lf -command "source '${XDG_CONFIG_HOME:-$HOME/.config}/lf-saveas/lfrc-saveas" "$startdir"
 if [ -f "$LF_SAVEAS_TEMPDIR/path" ]; then
 	cat "$LF_SAVEAS_TEMPDIR/path"
+	if [ -n "$outfile" ]; then 
+		cat "$LF_SAVEAS_TEMPDIR/path" >"$outfile"
+	fi
 	cleanup
 else
 	cleanup
