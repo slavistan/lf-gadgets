@@ -3,6 +3,7 @@
 # TODO:
 #  -m: multiple files
 #  -z: Use nullbyte as separator for multiple files
+#  -o: Allow multiple calls
 #  README.md
 #  Rename (lf-filedialog maybe?)
 #  Rename /path to /selection
