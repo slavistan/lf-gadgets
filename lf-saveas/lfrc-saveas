@@ -19,7 +19,7 @@ cmd accept %{{
 	lf -remote "send $id quit"
 }}
 
-cmd saveas %{{
+cmd new %{{
 	if [ "$#" -ne 1 ]; then
 		lf -remote "send $id echoerr Need exactly one argument. Abort"
 		return 1
