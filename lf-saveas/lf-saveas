@@ -24,18 +24,30 @@ usage() {
 		File dialogues using ${hl}lf${d}. Selection is written to stdout.
 
 		Usage:
-		    $name [-t ${p}TYPE${d}] [-s ${p}STARTDIR${d}] [-o ${p}OUTFILE${d}]
+		    $name [-t ${p}TYPE${d}] [-s ${p}STARTDIR${d}] [-o ${p}OUTFILE${d}] [-p ${p}PROMPT${d}]
+		              [-x [${p}TERMARGS${d}]...]
 
-		        -t ${p}TYPE${d} what type of object(s) to return and
-		           may be any combination of the letters ${i}f${d} (files),
-		           ${i}d${d} (directories). DEFAULT: fd
+		        -t ${p}TYPE${d}   Specify what type of object(s) to return. May
+		            be any combination of the letters ${i}f${d} (files),
+		            ${i}d${d} (directories). DEFAULT: fd
 
-		        ${p}STARTDIR${d} sets the dialog's default working directory.
-		          DEFAULT: Working directory of the executing shell
+		        -s ${p}STARTDIR${d}   Set the dialog's default working directory.
+		            DEFAULT: Working directory of the executing shell
+
+		        -o ${p}OUTFILE${d}   Write output to ${p}OUTFILE${d}, in addition to stdout.
+		            Can be invoked multiple times. DEFAULT: None
+
+		        -p ${p}PROMPT${d}   Configure the dialog prompt. DEFAULT: None
+
+		        -x ${p}TERMARGS${d}   Display dialog in a new terminal window using
+		            the \$TERMINAL envvar. Optional ${p}TERMARGS${d} may be used to
+		            pass parameters to the terminal. MUST be the last option
+		            if present. DEFAULT: None
 	EOF
 }
 
 parseargs() {
+	# CONTINUEHERE: Parse -x as the final option
 	if [ "$1" = "-x" ]; then
 		shift
 		tempfile="$LF_SAVEAS_TEMPDIR/termout"
@@ -51,7 +63,14 @@ parseargs() {
 		-h|--help) usage; exit ;;
 		-t) type_="$2"; shift ;;
 		-s) startdir="$2"; shift ;;
-		-o) outfile="$2"; shift ;; # don't use -o manually!
+		-o) 
+			if [ -z "$outfile" ]; then
+				outfile="$2"
+			else
+				outfile="$outfile\n$2"
+			fi
+			shift
+			;;
 		-p) prompt="$2"; shift ;;
 		*)  break ;;
 		esac
@@ -79,9 +98,9 @@ export LF_SAVEAS_PROMPT="$prompt"
 lf -command "source '${XDG_CONFIG_HOME:-$HOME/.config}/lf-saveas/lfrc-saveas" "$startdir"
 if [ -f "$LF_SAVEAS_TEMPDIR/path" ]; then
 	cat "$LF_SAVEAS_TEMPDIR/path"
-	if [ -n "$outfile" ]; then 
-		cat "$LF_SAVEAS_TEMPDIR/path" >"$outfile"
-	fi
+	echo "$outfile" | while read -r line; do
+		cat "$LF_SAVEAS_TEMPDIR/path" >"$line"
+	done
 	cleanup
 else
 	cleanup
