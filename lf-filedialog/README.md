@@ -7,6 +7,9 @@ TODO: demo.gif
 Excerpt from `lf-filedialog --help`:
 
 ```
+Press return to choose the currently selected file or use the command
+'new <FILENAME>' to print a new filename.
+
 lf-filedialog [-t TYPE] [-s STARTDIR] [-o OUTFILE] [-p PROMPT]
 		  [-x [TERMARGS]...]
 
@@ -28,23 +31,23 @@ lf-filedialog [-t TYPE] [-s STARTDIR] [-o OUTFILE] [-p PROMPT]
 		if present. DEFAULT: None
 ```
 
-Please take note of the known limitations of interfacing TUIs with
-shell scripts: As TUIs (such as `lf`) communicate with the terminal
-via stdout/stdin to draw their layouts it is impossible to use
-return values in the usual manner (by capturing a commands stdout, e.g.
-`d=$(date)`). `x=$(lf)` will do nothing for the same reason `x=$(htop)`
-will not display its TUI.
+Please take note of the known limitations of interfacing TUIs with shell
+scripts: As TUIs (such as `lf`) communicate with the terminal via stdout/stdin
+to draw their layouts it is impossible to use return values in the usual manner
+(by capturing a commands stdout, e.g. `x=$(date)`). `x=$(lf)` will do nothing
+for the same reason `x=$(htop)` will not display its TUI.
 
-Thus, when using `lf-filedialog` inside shell scripts you may either
-use the `-x` flag, which will display the dialog inside a new terminal,
-e.g. like so:
+Thus, when using `lf-filedialog` inside shell scripts you may use the `-x`
+option which will display the dialog inside a new terminal and allows to
+capture the script's stdout:
 
 ```
 myfile="$(lf-filedialog -p "Select a file:" -t f -x)"
 echo "$myfile"
 ```
 
-or, alternatively, use the `-o` flag to write the selection to a file:
+Alternatively, to display the dialog in the same terminal use the `-o` option
+to write the selection to a file:
 
 ```
 lf-filedialog -p "Select a file:" -t f -o /tmp/selection
@@ -52,7 +55,10 @@ myfile="$(cat /tmp/selection)"
 echo "$myfile"
 ```
 
+
 ## Installation
+
+Requires `zsh`.
 
 ```
 # copy scripts into $PATH

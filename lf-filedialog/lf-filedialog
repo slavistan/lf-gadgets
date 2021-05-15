@@ -21,8 +21,7 @@ usage() {
 Pick files with ${hl}lf${d} and print their paths.
 
 Press ${i}return${d} to choose the currently selected file or use the command
-${i}new <FILENAME>${d} to return the path to a new file. Currently, only a
-single file can be chosen.
+'${i}new <FILENAME>${d}' to print a new filename.
 
 Usage:
     ${hl}${ZSH_ARGZERO:t}${d} [-t ${p}TYPE${d}] [-s ${p}STARTDIR${d}] [-o ${p}OUTFILE${d}] [-p ${p}PROMPT${d}]
