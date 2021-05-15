@@ -1,5 +1,7 @@
 # File Dialogs using **lf**
 
+TODO: demo.gif
+
 ## Usage
 
 Excerpt from `lf-filedialog --help`:
@@ -45,7 +47,7 @@ echo "$myfile"
 or, alternatively, use the `-o` flag to write the selection to a file:
 
 ```
-lf-filedialog -p "Select a file:" -t f -o /tmp/selection >/dev/null
+lf-filedialog -p "Select a file:" -t f -o /tmp/selection
 myfile="$(cat /tmp/selection)"
 echo "$myfile"
 ```
