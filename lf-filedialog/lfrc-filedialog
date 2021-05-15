@@ -1,36 +1,36 @@
 %{{
-	lf -remote "send $id set promptfmt '$LF_SAVEAS_PROMPT'"
+	lf -remote "send $id set promptfmt '$LF_FILEDIALOG_PROMPT'"
 }}
 map <enter> accept
 
 cmd accept %{{
 	if [ -f "$f" ]; then
-		if ! printf "$LF_SAVEAS_TYPE" | grep -qF "f"; then
+		if ! printf "$LF_FILEDIALOG_TYPE" | grep -qF "f"; then
 			lf -remote "send $id echoerr Regular files not allowed."
-			return 1
+			exit 1
 		fi
 	elif [ -d "$f" ]; then
-		if ! printf "$LF_SAVEAS_TYPE" | grep -qF "d"; then
+		if ! printf "$LF_FILEDIALOG_TYPE" | grep -qF "d"; then
 			lf -remote "send $id echoerr Directories not allowed."
-			return 1
+			exit 1
 		fi
 	fi
-	printf -- "%s" "$f" >"$LF_SAVEAS_TEMPDIR/selection"
+	printf -- "%s" "$f" >"$LF_FILEDIALOG_TEMPDIR/selection"
 	lf -remote "send $id quit"
 }}
 
 cmd new %{{
 	if [ "$#" -ne 1 ]; then
 		lf -remote "send $id echoerr Need exactly one argument. Abort"
-		return 1
+		exit 1
 	fi
 
 	fullpath="$(pwd)/$1"
 	if [ -e "$fullpath" ]; then
 		lf -remote "send $id echoerr File already exist."
-		return 1
+		exit 1
 	fi
 
-	printf -- "%s" "$fullpath" >"$LF_SAVEAS_TEMPDIR/selection"
+	printf -- "%s" "$fullpath" >"$LF_FILEDIALOG_TEMPDIR/selection"
 	lf -remote "send $id quit"
 }}
