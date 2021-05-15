@@ -17,7 +17,7 @@ lf-filedialog [-t TYPE] [-s STARTDIR] [-o OUTFILE] [-p PROMPT]
 	-s STARTDIR   Set the dialog's default working directory.
 		DEFAULT: Working directory of the executing shell
 
-	-o OUTFILE   Write output to OUTFILE, in addition to stdout.
+	-o OUTFILE   Write output to OUTFILE instead of stdout.
 		Can be invoked multiple times. DEFAULT: None
 
 	-p PROMPT   Configure the dialog prompt. DEFAULT: 'Select files(s):'
