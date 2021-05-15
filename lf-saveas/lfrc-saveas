@@ -15,7 +15,7 @@ cmd accept %{{
 			return 1
 		fi
 	fi
-	printf -- "%s" "$f" >"$LF_SAVEAS_TEMPDIR/path"
+	printf -- "%s" "$f" >"$LF_SAVEAS_TEMPDIR/selection"
 	lf -remote "send $id quit"
 }}
 
@@ -31,6 +31,6 @@ cmd new %{{
 		return 1
 	fi
 
-	printf -- "%s" "$fullpath" >"$LF_SAVEAS_TEMPDIR/path"
+	printf -- "%s" "$fullpath" >"$LF_SAVEAS_TEMPDIR/selection"
 	lf -remote "send $id quit"
 }}
