@@ -1,18 +1,18 @@
 set previewer lf-scrollingpreview-previewer
 
-map <lt> decoffset
-map <gt> incoffset
+map <lt> scrollup
+map <gt> scrolldown
 
-cmd incoffset &{{
+cmd scrolldown &{{
 	offset="$(cat "$LF_SCROLLINGPREVIEW_TEMPDIR/offset")"
 	echo "$(( offset + 1 ))" >"$LF_SCROLLINGPREVIEW_TEMPDIR/offset"
+	lf -remote "send $id reload"
 }}
 
-cmd decoffset &{{
+cmd scrollup &{{
 	offset="$(cat "$LF_SCROLLINGPREVIEW_TEMPDIR/offset")"
 	if [ "$offset" -gt 1 ]; then
 		echo "$(( offset - 1 ))" >"$LF_SCROLLINGPREVIEW_TEMPDIR/offset"
 	fi
+	lf -remote "send $id reload"
 }}
-
-# Put additional configuration which shall only apply to lf-scrollingpreview below
