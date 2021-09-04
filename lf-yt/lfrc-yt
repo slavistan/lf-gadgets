@@ -1,5 +1,6 @@
 set previewer lf-yt-previewer
 set cleaner lf-yt-cleaner
+set preview
 set nohidden
 set noicons
 set ratios 1:3
@@ -7,19 +8,23 @@ set ratios 1:3
 map <enter> play
 map d dl_selected
 
-cmd play %{{
-	lf -remote "send $id %mpv https://youtu.be/$(basename $f) >/dev/null 2>&1 &"
+cmd play &{{
+	mpv "https://youtu.be/$(basename $f)" >/dev/null 2>&1
 }}
-cmd dl_selected %{{
+
+cmd dl_selected &{{
+	# Setup download location.
 	dldir=~/.lf-yt
 	mkdir -p "$dldir"
+
+	# Perform download(s) in parallel.
 	if [ -z "$fs" ]; then
-		youtube-dl -o "$dldir"'/%(title)s.%(ext)s' "https://youtu.be/$(basename "$f")" \
-		>/dev/null 2>&1 &
+		youtube-dl -o "$dldir"'/%(title)s.%(ext)s' "https://youtu.be/$(basename "$f")" >/dev/null 2>&1
 	else
-		echo "$fs" | xargs -n 1 -P 1 basename | while read videoid; do
-			youtube-dl -o "$dldir"'/%(title)s.%(ext)s' "https://youtu.be/$videoid" \
-			>/dev/null 2>&1 &
-		done
+		echo "$fs" | xargs -n 1 basename | xargs -n 1 printf "https://youtu.be/%s\n" |
+			xargs -n 1 -P 2 youtube-dl -o "$dldir"'/%(title)s.%(ext)s' >/dev/null 2>&1
 	fi
+	
+	# Display a message after everything is done.
+	lf -remote "send $id :echo \"Download(s) are finished!\""
 }}

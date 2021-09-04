@@ -2,22 +2,21 @@
 
 ![](demo.gif)
 
-Given an input `lf-yt` searches Youtube and, showing video thumbnails, allows
-to select videos for preview and download. Downloads are saved to *~/.lf-yt*.
+Given an input `lf-yt` searches Youtube and, showing video thumbnails, allows to select videos for preview and download. Downloads are saved to *~/.lf-yt*.
 
 ## Usage
 
-Export your Youtube API-key to the environment variable *YT_API_KEY* or store it inside
-the file *~/.youtube.apikey*. Then run a search query, e.g. `lf-yt Chopin`.
+Export your Youtube API-key to the environment variable *YT_API_KEY* or store it inside the file *~/.youtube.apikey*. Then open a terminal and run a search query, e.g. `lf-yt Chopin`.
 
 ## Installation
 
 Prerequisites:
 
 + A youtube API-key
-+ `ueberzug`
-+ `mpv`
-+ `youtube-dl`
++ zsh
++ ueberzug
++ mpv
++ youtube-dl
 
 From inside this subdirectory run these instructions as a regular user:
 

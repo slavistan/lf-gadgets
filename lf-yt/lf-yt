@@ -1,10 +1,11 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
+# We use zsh here for process substitution.
 
 cleanup() {
 	lf-yt-cleaner
-	rm -r "$LF_YT_TEMPDIR" 2>/dev/null
+	rm -rf "$LF_YT_TEMPDIR" 
 	kill "$ueberzugpid" 2>/dev/null
-	pkill -f "tail -f $LF_YT_TEMPDIR/.fifo" # kill tail zombie
+	pkill -f "tail -f $LF_YT_TEMPDIR/.fifo" >/dev/null
 }
 
 ###
@@ -24,11 +25,12 @@ fi
 
 LF_YT_TEMPDIR="$(mktemp -d -t lf-yt-XXXXXX)"
 export LF_YT_TEMPDIR
-trap cleanup INT
+trap cleanup INT HUP TERM
 
 query="$@"
 if [ -z "$query" ]; then
 	echo "Nothing to search. Abort." >&2
+	cleanup
 	exit 1
 fi
 query="$(echo "$query" | sed 's/ /+/g')"
@@ -39,7 +41,7 @@ thumbnailurls="$(echo "$reply" | jq -r '.items[].snippet.thumbnails.high.url')"
 videoids="$(echo "$reply" | jq -r '.items[].id.videoId')"
 titles="$(echo "$reply" | jq -r '.items[].snippet.title')"
 
-# download thumbnails
+# download thumbnails in parallel
 cd "$LF_YT_TEMPDIR"
 paste -d '\n' <(echo "$videoids") <(echo "$thumbnailurls") |
 	xargs -n 2 -P 8 curl -s -o
@@ -54,9 +56,8 @@ paste -d ' ' <(echo "$videoids") <(echo "$titles") | while read line; do
 done
 
 # prepare ueberzug and start lf
-mkfifo "$LF_YT_TEMPDIR/.fifo" # fifo must be hidden to not be shown by lf
+mkfifo "$LF_YT_TEMPDIR/.fifo"
 tail -f "$LF_YT_TEMPDIR/.fifo" | ueberzug layer --silent &
 ueberzugpid=$!
-lf -command "source '${XDG_CONFIG_HOME:-$HOME/.config}/lf-yt/lfrc-yt" "$LF_YT_TEMPDIR"
+lf -config "$HOME/.config/lf-yt/lfrc-yt" "$LF_YT_TEMPDIR"
 cleanup
-# TODO: posix shell
