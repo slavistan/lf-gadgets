@@ -1,9 +1,7 @@
 **A collection of useful and nifty use cases and configurations for the lf TUI file manager**
 
-<img src="lf-shellcd/demo.gif" width="300px"/>
-<img src="lf-ueberzug/demo.gif" width="300px"/>
-<img src="lf-scrollingpreview/demo.gif" width="300px"/>
-<img src="lf-yt/demo.gif" width="300px"/>
+<img src="lf-shellcd/demo.gif" width="300px"/> <img src="lf-ueberzug/demo.gif" width="300px"/>
+<img src="lf-scrollingpreview/demo.gif" width="300px"/> <img src="lf-yt/demo.gif" width="300px"/>
 
 
 # 1. Introduction
