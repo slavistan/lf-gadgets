@@ -4,8 +4,13 @@ map <lt> scrollup
 map <gt> scrolldown
 
 cmd scrolldown &{{
+	# Retrieve the current preview offset.
 	offset="$(cat "$LF_SCROLLINGPREVIEW_TEMPDIR/offset")"
+	
+	# Increment the offset.
 	echo "$(( offset + 1 ))" >"$LF_SCROLLINGPREVIEW_TEMPDIR/offset"
+	
+	# Trigger a reload.
 	lf -remote "send $id reload"
 }}
 
