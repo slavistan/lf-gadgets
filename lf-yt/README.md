@@ -19,7 +19,25 @@ Prerequisites:
 + `mpv`
 + `youtube-dl`
 
+From inside this subdirectory run these instructions as a regular user:
+
 ```
-# Install files (mind the 'sudo -E')
-sudo -E make install
+sudo cp lf-yt lf-yt-previewer lf-yt-cleaner /usr/local/bin
+mkdir -p "$HOME/.config/lf-yt"
+cp lfrc-yt "$HOME/.config/lf-yt"
 ```
+
+This will yield the following directory structure:
+
+```
+ /usr/local/bin
+├─  lf-yt
+├─  lf-yt-cleaner
+└─  lf-yt-previewer
+
+ $HOME/.config
+└─  lf-yt
+   └─  lfrc-yt
+```
+
+To **uninstall** simply delete the newly created files.
