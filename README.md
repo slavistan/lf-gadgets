@@ -19,7 +19,9 @@ Please take note that these showcases focus on intelligibility and clarity of in
 
 The gadgets are organized as self-sufficient and disjunct units. Browse the existing catalog and pick out what you find interesting. Physically, every gadget is a separate directory which includes a README showcasing its functionality, usually with screencasts which Github et al. will happily render. To explore simply click through the directories in your browser.
 
-Should you find something interesting clone the repository, install the configuration as instructed and try it out for yourself. Eventually, it is up to you to weave the functionality into your own setup of lf. This final step is out of this project's scope as the integration depends on your existing setup and on which gadgets you intend to include. However, should you be stuck you can create an issue if you feel a question or a problem you face would be of interest to other people.
+Should you find something interesting clone the repository, install the configuration as instructed and try it out for yourself. Eventually, it is up to you to weave the functionality into your own setup of lf. This final step is out of this project's scope as the integration depends on your existing setup and on which gadgets you intend to include. For an example of a feature-rich lf setup interweaving multiple gadgets have a look at [my personal configuration](https://github.com/slavistan/lfbundle).
+
+Nevertheless, should you have gotten stuck you can create an issue if you feel a question or a problem you face would be of interest to other people.
 
 ## 2.1 Catalog of Gadgets
 
