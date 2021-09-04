@@ -1,6 +1,6 @@
 **A collection of useful and nifty use cases and configurations for the lf TUI file manager**
 
-<div style="display:grid; grid-template-columns:repeat(auto-fill, 350px); grid-gap:10px; justify-content: center">
+<div style="display:grid; grid-template-columns:auto auto auto auto; grid-gap:10px; justify-content: center">
     <img src="lf-shellcd/demo.gif"/>
     <img src="lf-ueberzug/demo.gif"/>
     <img src="lf-scrollingpreview/demo.gif"/>
@@ -40,3 +40,8 @@ Here's a brief overview of the existing gadgets. For more detailed information a
 This project in its entirety is licensed under the GPLv3 license, a copy of which is can be found in the LICENSE file.
 
 If you find bugs, deem the documentation to be lacking or have an idea for a gadget yourself please create an issue or a pull request. You are warlmy welcomed to contribute and to voice your ideas.
+
+<div align="center" style="font-size:20px">
+    𝄽<br>
+    <p style="font-size:10px">Copyright © 2021 Stanislaw Hüll</p>
+</div>
