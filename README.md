@@ -1,7 +1,9 @@
 **A collection of useful and nifty use cases and configurations for the lf TUI file manager**
 
-<img src="lf-shellcd/demo.gif" width="300px"/> <img src="lf-ueberzug/demo.gif" width="300px"/>
-<img src="lf-scrollingpreview/demo.gif" width="300px"/> <img src="lf-yt/demo.gif" width="300px"/>
+<div align="center">
+    <img src="lf-shellcd/demo.gif" width="300px"/> <img src="lf-ueberzug/demo.gif" width="300px"/>
+    <img src="lf-scrollingpreview/demo.gif" width="300px"/> <img src="lf-yt/demo.gif" width="300px"/>
+</div>
 
 
 # 1. Introduction
@@ -37,7 +39,7 @@ This project in its entirety is licensed under the GPLv3 license, a copy of whic
 
 If you find bugs, deem the documentation to be lacking or have an idea for a gadget yourself please create an issue or a pull request. You are warlmy welcomed to contribute and to voice your ideas.
 
-<div align="center" style="font-size:20px">
+<div align="center">
     𝄽<br>
-    <p style="font-size:10px">Copyright © 2021 Stanislaw Hüll</p>
+    Copyright © 2021 Stanislaw Hüll
 </div>
