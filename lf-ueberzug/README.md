@@ -2,37 +2,18 @@
 
 ![](demo.gif)
 
-Installs `lf-ueberzug` which sets up `lf` to preview images, documents and
-video thumbnails with `ueberzug`. Preview behavior can be extend or adjusted in
-*lf-ueberzug-previewer*.
-
+`lf-ueberzug` will preview images, documents and video thumbnails with `ueberzug`. Preview behavior can be extend or adjusted in *lf-ueberzug-previewer*.
 
 ## Usage
 
-```
-lf-ueberzug
-```
+Run `./lf-ueberzug`. Optionally, a startup directory can be specified. By default, `lf-ueberzug` will launch inside the *examples* directory. No installation is required.
 
-For comfy shell integration simply `alias lf=lf-ueberzug` or, if you'd
-additionally like to change your shell's working directory upon exiting `lf`,
-see `lf-shellcd`, which is part of this repository.
+**Prerequisites**
 
++ `zsh` for scripting
++ `ueberzug` for all graphical previews
++ `graphicsmagick` for svg and gif previews
++ `ffmpeg` for video file thumbnails
++ `gs` for PDF previews
 
-## Installation
-
-Prerequisites:
-+ ueberzug
-+ graphicsmagick (for svg and gif previews)
-+ ffmpeg (for video file thumbnails)
-+ gs (for pdf previews)
-
-```
-# copy scripts into $PATH
-sudo cp lf-ueberzug lf-ueberzug-cleaner lf-ueberzug-previewer /usr/local/bin
-
-# copy config file
-mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}/lf-ueberzug"
-cp lfrc-ueberzug "${XDG_CONFIG_HOME:-$HOME/.config}/lf-ueberzug"
-```
-
-To uninstall simply delete the files.
+For shell integration symlink `lf-ueberzug` into */usr/local/bin* and `alias lf=lf-ueberzug` in your shell configuration. This can be combined with the functionality of `lf-shellcd`, which is part of this directory, to change your working directory upon exiting.
