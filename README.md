@@ -12,14 +12,14 @@
 
 The purpose of this project is to showcase configurations of and around lf which extend its core functionality by application of these mechanisms. These *gadgets* include useful additions like graphical overlays for file previews and integration with your interactive shell as well as playful gimmicks such as browsing youtube. See the overview below for a full list.
 
-Please take note that these showcases focus on intelligibility and clarity of intent and their purpose is to inspire ideas rather than to be feature-complete implementations and to be used on their own. To this end the individual gadgets do just as much as necessary to communicate their core idea and use the aforementioned basic mechanisms for the implementation.
+Please take note that these showcases focus on intelligibility and clarity of intent and their purpose is to inspire ideas rather than to be feature-complete implementations and to be used on their own. To this end, the individual gadgets do just as much as necessary to communicate their core idea and use the aforementioned basic mechanisms for the implementation.
 
 
-# 2. Setup and Installation
+# 2. Setup and Usage
 
 The gadgets are organized as self-sufficient and disjunct units. Browse the existing catalog and pick out what you find interesting. Physically, every gadget is a separate directory which includes a README showcasing its functionality, usually with screencasts which Github et al. will happily render. To explore simply click through the directories in your browser.
 
-Should you find something interesting clone the repository, install the configuration as instructed and try it out for yourself. Eventually, it is up to you to weave the functionality into your own setup of lf. This final step is out of this project's scope as the integration depends on your existing setup and on which gadgets you intend to include. For an example of a feature-rich lf setup interweaving multiple gadgets have a look at [my personal configuration](https://github.com/slavistan/lfbundle).
+Should you find something interesting clone the repository, and try out the gadget for yourself. Eventually, it is up to you to weave the functionality into your own setup of lf. This final step is out of this project's scope as the integration depends on your existing setup and on which gadgets you intend to include. For an example of a feature-rich lf setup interweaving multiple gadgets have a look at [my personal configuration](https://github.com/slavistan/lfbundle).
 
 Nevertheless, should you have gotten stuck you can create an issue if you feel a question or a problem you face would be of interest to other people.
 
