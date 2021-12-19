@@ -3,10 +3,15 @@
 # Retrieve the current preview offset.
 offset="$(cat "$LF_SCROLLINGPREVIEW_TEMPDIR/offset")"
 
-# Apply offset during the generation of the preview.
+# Apply offset during the generation of the preview. This is the place to
+# implement filetype dependent scrolling, e.g. pagination for PDFs, or
+# scrolling through the frames of '.gif' files, etc. Simply Use $offset to
+# generate a thumbnail for the $offset-th page or frame.
+# In this MWE we use awk to specify a line range to output for text files.
+file="$1"
 case "$(basename "$1" | tr '[:upper:]' '[:lower:]')" in
 *)
-	# Use awk to select a page range.	
-	awk "NR > ${offset}-1" "$1"
+	# Use awk to select a page range.
+	nl -ba "$file" | awk "NR > ${offset}-1"
 	;;
 esac
