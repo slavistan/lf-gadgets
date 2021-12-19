@@ -1,25 +1,51 @@
-set previewer lf-yt-previewer
-set cleaner lf-yt-cleaner
+set previewer "lf-yt-previewer"
+set cleaner "lf-yt-cleaner"
+set ratios 1:3
+set preview
 set nohidden
 set noicons
-set ratios 1:3
+set shell zsh
+set filesep '\0'
 
 map <enter> play
-map d dl_selected
+map d download_selected
+map s stop_downloads
 
-cmd play %{{
-	lf -remote "send $id %mpv https://youtu.be/$(basename $f) >/dev/null 2>&1 &"
+cmd play &{{
+	mpv "https://youtu.be/$(basename $f)" >/dev/null 2>&1
 }}
-cmd dl_selected %{{
-	dldir=~/.lf-yt
-	mkdir -p "$dldir"
-	if [ -z "$fs" ]; then
-		youtube-dl -o "$dldir"'/%(title)s.%(ext)s' "https://youtu.be/$(basename "$f")" \
-		>/dev/null 2>&1 &
-	else
-		echo "$fs" | xargs -n 1 -P 1 basename | while read videoid; do
-			youtube-dl -o "$dldir"'/%(title)s.%(ext)s' "https://youtu.be/$videoid" \
-			>/dev/null 2>&1 &
-		done
-	fi
+
+cmd download_selected &{{
+	files=("${(@s/\0/)fx}")
+	for elem in $files; do
+		video_id="${elem:A:t}"
+		output_path="$LF_YT_DOWNLOAD_DIR/$LF_YT_FILENAME_TEMPLATE"
+		dl_indicator="$LF_YT_TEMPDIR/.downloading/$video_id"
+		
+		# Skip duplicate downloads.
+		[ -f "$dl_indicator" ] && continue
+
+		# Start download.
+		(
+			youtube-dl -o "$output_path" "https://youtu.be/$video_id" >/dev/null 2>&1 &
+			echo $! >"$dl_indicator"
+			wait
+			rm "$dl_indicator"
+			lf -remote "send $id :reload"
+		) &
+	done
+	
+	# Unselect videos after downloads have been queued.
+	lf -remote "send $id :unselect"
+}}
+
+cmd stop_downloads &{{
+	# Get PID from download indicator files and kill the process.
+	find "$LF_YT_TEMPDIR/.downloading" -type f | while read filename; do
+		kill "$(cat "$filename")" >/dev/null 2>&1
+		rm -f "$filename"
+	done
+
+	# Reload ui.
+	lf -remote "send $id :reload"
 }}

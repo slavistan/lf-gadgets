@@ -1,15 +1,17 @@
 #!/usr/bin/env sh
 
+# Retrieve the current preview offset.
 offset="$(cat "$LF_SCROLLINGPREVIEW_TEMPDIR/offset")"
 
-file="$1"; shift
-case "$(basename "$file" | tr '[:upper:]' '[:lower:]')" in
-*.tar*) tar tf "$file" ;;
-*.zip) unzip -l "$file" ;;
-*.rar) unrar l "$file" ;;
-*.7z) 7z l "$file" ;;
-*.avi|*.mp4|*.mkv|*.pdf|*.jpg|*.jpeg|*.png|*.bmp|*.svg|*.gif)
-	file "$file" # dummy; use 'lf-ueberzug' for gui previews
+# Apply offset during the generation of the preview. This is the place to
+# implement filetype dependent scrolling, e.g. pagination for PDFs, or
+# scrolling through the frames of '.gif' files, etc. Simply Use $offset to
+# generate a thumbnail for the $offset-th page or frame.
+# In this MWE we use awk to specify a line range to output for text files.
+file="$1"
+case "$(basename "$1" | tr '[:upper:]' '[:lower:]')" in
+*)
+	# Use awk to select a page range.
+	nl -ba "$file" | awk "NR > ${offset}-1"
 	;;
-*) sed -n "$offset,\$p" "$file" ;;
 esac

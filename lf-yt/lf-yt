@@ -1,18 +1,22 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
+# We use zsh here for process substitution.
+
+set -e
+
+### User settings.
+maxresults=35 # Maximum number of search result to show
+export LF_YT_DOWNLOAD_DIR="$HOME/.lf-yt" # Base directory for video downloads
+export LF_YT_FILENAME_TEMPLATE="%(title)s.%(ext)s" # youtube-dl filename template
 
 cleanup() {
 	lf-yt-cleaner
-	rm -r "$LF_YT_TEMPDIR" 2>/dev/null
-	kill "$ueberzugpid" 2>/dev/null
-	pkill -f "tail -f $LF_YT_TEMPDIR/.fifo" # kill tail zombie
+	rm -rf "$LF_YT_TEMPDIR"
+	kill "$UEBERZUGPID" 2>/dev/null
+	pkill -f "tail -f $LF_YT_TEMPDIR/.fifo" >/dev/null
 }
+trap cleanup INT HUP TERM
 
-###
-### Settings
-###
-maxresults=15
-
-# check api key
+# Check API-key.
 if [ -z "$YT_API_KEY" ]; then
 	if YT_API_KEY="$(cat ~/.youtube.apikey 2>/dev/null)"; then
 		export YT_API_KEY
@@ -22,41 +26,47 @@ if [ -z "$YT_API_KEY" ]; then
 	fi
 fi
 
-LF_YT_TEMPDIR="$(mktemp -d -t lf-yt-XXXXXX)"
-export LF_YT_TEMPDIR
-trap cleanup INT
+# Set up temporary and download directory as well as a directory to track
+# currently active downloads.
+export LF_YT_TEMPDIR="${LF_YT_TEMPDIR:-$(mktemp -d -t lf-yt-XXXXXX)}" # Base tmpdir
+mkdir -p "$LF_YT_TEMPDIR" "$LF_YT_DOWNLOAD_DIR" "$LF_YT_TEMPDIR/.downloading"
 
+# Parse query and convert spaces to '+' characters.
 query="$@"
 if [ -z "$query" ]; then
 	echo "Nothing to search. Abort." >&2
+	cleanup
 	exit 1
 fi
 query="$(echo "$query" | sed 's/ /+/g')"
 
-# get urls of thumbnails, video- and audio-streams
-reply="$(curl -s "https://www.googleapis.com/youtube/v3/search?part=snippet&q=$query&type=video&maxResults=$maxresults&key=$YT_API_KEY")"
-thumbnailurls="$(echo "$reply" | jq -r '.items[].snippet.thumbnails.high.url')"
-videoids="$(echo "$reply" | jq -r '.items[].id.videoId')"
-titles="$(echo "$reply" | jq -r '.items[].snippet.title')"
+# Fetch URLs of thumbnails, video- and audio-streams from the request's metadata.
+metadata="$(curl -s "https://www.googleapis.com/youtube/v3/search?part=snippet&q=$query&type=video&maxResults=$maxresults&key=$YT_API_KEY")"
+thumbnailurls="$(echo "$metadata" | jq -r '.items[].snippet.thumbnails.high.url')"
+videoids="$(echo "$metadata" | jq -r '.items[].id.videoId')"
+titles="$(echo "$metadata" | jq -r '.items[].snippet.title')"
 
-# download thumbnails
+# Download thumbnails concurrently.
 cd "$LF_YT_TEMPDIR"
 paste -d '\n' <(echo "$videoids") <(echo "$thumbnailurls") |
 	xargs -n 2 -P 8 curl -s -o
 cd - >/dev/null
 
-# save titles to .<videoid>.title which will be used by lf-yt-previewer
-# to view the video title
+# Save titles to .<videoid>.title which will be used by lf-yt-previewer to
+# display the video title.
 paste -d ' ' <(echo "$videoids") <(echo "$titles") | while read line; do
 	videoid="$(echo "$line" | cut -d' ' -f1)"
 	title="$(echo "$line" | cut -d' ' -f2-)"
 	echo "$title" > "$LF_YT_TEMPDIR/.$videoid.title"
 done
 
-# prepare ueberzug and start lf
-mkfifo "$LF_YT_TEMPDIR/.fifo" # fifo must be hidden to not be shown by lf
+# Launch ueberzug.
+mkfifo "$LF_YT_TEMPDIR/.fifo"
 tail -f "$LF_YT_TEMPDIR/.fifo" | ueberzug layer --silent &
-ueberzugpid=$!
-lf -command "source '${XDG_CONFIG_HOME:-$HOME/.config}/lf-yt/lfrc-yt" "$LF_YT_TEMPDIR"
+UEBERZUGPID=$!
+
+# Add this script's directory to PATH so that the lf config will find
+# lf-yt-cleaner and lf-yt-previewer. Start lf.
+export PATH="$PATH:${ZSH_ARGZERO:A:h}"
+lf -config "${ZSH_ARGZERO:A:h}/lfrc-yt" "$LF_YT_TEMPDIR"
 cleanup
-# TODO: posix shell
