@@ -43,5 +43,5 @@ If you find bugs, deem the documentation to be lacking or have an idea for a gad
 
 <div align="center">
     𝄽<br>
-    Copyright © 2021 Stanislaw Hüll
+    Copyright © 2022 Stanislaw Hüll
 </div>
