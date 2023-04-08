@@ -1,0 +1,15 @@
+#!/bin/bash
+
+dir="$(realpath "$(dirname -- "$0")")"
+
+cleanup() {
+	lf-kitty-cleaner
+	rm -rf "$LF_KITTY_TEMPDIR"
+}
+trap cleanup INT HUP
+
+export LF_KITTY_TEMPDIR="$(mktemp -d -t lf-kitty-XXXXXX)"
+export LF_KITTY_IMAGE_ID=1234
+export PATH="$dir:$PATH"
+lf -config "$dir/lfrc-kitty" "$dir/examples"
+cleanup

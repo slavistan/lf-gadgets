@@ -1,0 +1,3 @@
+#!/bin/bash
+
+kitty.sh delete_img $LF_KITTY_IMAGE_ID 0

@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Called by lf to generate the preview.
+#   $1 file path
+#   $4 x offset in cell coordinates
+#   $5 y offset in cell coordinates
+#   $2 width of the display area in cell coordinates
+#   $3 height of the display area in cell coordinates
+THUMBNAIL_FPATH="$LF_KITTY_TEMPDIR/thumbnail.png"
+
+case "$(basename -- "$1" | tr '[:upper:]' '[:lower:]')" in
+*.png)
+	kitty.sh show "$1" $LF_KITTY_IMAGE_ID 1 $4 $5 $2 $3
+	;;
+*.pdf)
+	gs -o "$THUMBNAIL_FPATH" -sDEVICE=pngalpha -dLastPage=1 "$1" >/dev/null
+	kitty.sh show "$THUMBNAIL_FPATH" $LF_KITTY_IMAGE_ID 1 $4 $5 $2 $3
+	;;
+*.gif)
+	gm convert "${1}[0]" "$THUMBNAIL_FPATH"
+	kitty.sh show "$THUMBNAIL_FPATH" $LF_KITTY_IMAGE_ID 1 $4 $5 $2 $3
+	;;
+*.jpg|*.jpeg|*.bmp|*.svg)
+	gm convert "$1" "$THUMBNAIL_FPATH"
+	kitty.sh show "$THUMBNAIL_FPATH" $LF_KITTY_IMAGE_ID 1 $4 $5 $2 $3
+	;;
+*)
+	cat "$1"
+	;;
+esac
+exit 127

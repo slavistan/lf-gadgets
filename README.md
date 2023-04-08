@@ -30,6 +30,7 @@ Here's a brief overview of the existing gadgets. For more detailed information a
 | Gadget              | Description                                                            | Link
 | ---                 | ---                                                                    | ---
 | lf-shellcd          | Change the working directory of your interactive shell when exiting lf | [🔗](https://github.com/slavistan/lf-gadgets/tree/master/lf-shellcd)
+| lf-kitty            | Basic graphical file previews with the kitty graphics protocol         | [🔗](https://github.com/slavistan/lf-gadgets/tree/master/lf-kitty)
 | lf-ueberzug         | Graphical file previews with ueberzug                                  | [🔗](https://github.com/slavistan/lf-gadgets/tree/master/lf-ueberzug)
 | lf-scrollingpreview | Scroll the contents of files in the preview pane                       | [🔗](https://github.com/slavistan/lf-gadgets/tree/master/lf-scrollingpreview)
 | lf-yt               | Preview and download Youtube search results                            | [🔗](https://github.com/slavistan/lf-gadgets/tree/master/lf-yt)
@@ -43,5 +44,5 @@ If you find bugs, deem the documentation to be lacking or have an idea for a gad
 
 <div align="center">
     𝄽<br>
-    Copyright © 2022 Stanislaw Hüll
+    Copyright © 2023 Stanislaw Hüll
 </div>
